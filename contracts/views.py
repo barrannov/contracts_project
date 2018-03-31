@@ -5,6 +5,12 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 
 
+class HomePage(View):
+    template_name = 'home_page.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
 class UserFormView(View):
     form_class = UserForm
     template_name = 'registration_form.html'
@@ -19,16 +25,18 @@ class UserFormView(View):
         if form.is_valid():
             user = form.save(commit=False)
 
-            full_name = form.cleaned_data['full_name']
+            # first_name = form.cleaned_data['first_name']
+            # last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             user.set_password(password)
             user.save()
 
-            user = authenticate(full_name=full_name, email=email, password=password)
+            user = authenticate(username=username, email=email, password=password)
 
             if user is not None:
-                if user.is_active():
+                if user.is_active:
                     login(request, user)
                     return redirect('/')
         return render(request, self.template_name, {'form': form})
