@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django import forms
+from .models import ContractModel
 
 
 class LoginForm(forms.Form):
@@ -13,3 +14,10 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+
+
+class CreateContractForm(forms.ModelForm):
+
+    class Meta:
+        model = ContractModel
+        fields = ['name']

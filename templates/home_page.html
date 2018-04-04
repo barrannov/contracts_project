@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <p>Home page</p>
+<p>Home page</p>
+{% if user.is_authenticated %}
+    <a class="btn btn-primary" href="/create" role="button">Create</a>
+{% else %}
+    <p> Please authenticate to create a new contract.</p>
+{% endif %}
 
 {% endblock %}
