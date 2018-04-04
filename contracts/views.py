@@ -29,18 +29,21 @@ class CreateContract(View):
         if form.is_valid():
 
             name = form.cleaned_data['name']
-            contract_record = ContractModel(name=name)
+            author = self.request.user
+            contract_record = ContractModel(name=name, author=author)
             contract_record.save()
             return render(request, self.template_name, {'form': form, 'message': 'Successfully created!'})
 
 
-class MyContracts(generic.ListView):
+class MyContracts(View):
     template_name = 'my-contracts.html'
 
-    # TODO display contracts of each user specifically
-
-    def get_queryset(self):
-        return ContractModel.objects.all()
+    def get(self, request):
+        logged_in_user = request.user
+        print(logged_in_user)
+        logged_in_user_posts = ContractModel.objects.filter(author=logged_in_user)
+        return render(self.request, self.template_name, {'posts': logged_in_user_posts})
+        # return ContractModel.objects.all()
 
 
 class Login(View):
