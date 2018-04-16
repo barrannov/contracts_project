@@ -31,12 +31,12 @@ class Login(View):
         return render(request, self.template_name, {'form': form})
 
 
-
 class HomePage(View):
     template_name = 'home_page.html'
 
     def get(self, request):
         return render(request, self.template_name)
+
 
 class UserFormView(View):
     form_class = UserForm
