@@ -1,9 +1,58 @@
 from django.shortcuts import render
-from django.views import View
-from .forms import UserForm, LoginForm
+from django.views import View, generic
+from .forms import UserForm, LoginForm, CreateContractForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.views import login
 from django.shortcuts import redirect
+from .models import ContractModel
+
+
+class HomePage(View):
+    template_name = 'home_page.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+
+
+# class ContractSearch(ListView)
+
+
+class CreateContract(View):
+    form_class = CreateContractForm
+    template_name = 'create_contract.html'
+
+    def get(self, request):
+        form = self.form_class(None)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+
+            name = form.cleaned_data['name']
+            author = self.request.user
+            contract_record = ContractModel(name=name, author=author)
+            contract_record.save()
+            return render(request, self.template_name, {'form': form, 'message': 'Successfully created!'})
+
+
+class AllContracts(View):
+    template_name = 'all-contracts.html'
+
+    def get(self, request):
+        all_posts = ContractModel.objects.all()
+        return render(self.request, self.template_name, {'all_posts': all_posts})
+
+class MyContracts(View):
+    template_name = 'my-contracts.html'
+
+    def get(self, request):
+        logged_in_user = request.user
+        logged_in_user_posts = ContractModel.objects.filter(author=logged_in_user)
+        return render(self.request, self.template_name, {'posts': logged_in_user_posts})
+        # return ContractModel.objects.all()
 
 
 class Login(View):
@@ -19,23 +68,16 @@ class Login(View):
 
         if form.is_valid():
 
-            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            user = authenticate(username=username, password=password)
+            user = authenticate(email=email, password=password)
 
             if user is not None:
                 if user.is_active:
                     login(request, user)
                     return redirect('/')
         return render(request, self.template_name, {'form': form})
-
-
-class HomePage(View):
-    template_name = 'home_page.html'
-
-    def get(self, request):
-        return render(request, self.template_name)
 
 
 class UserFormView(View):
@@ -52,15 +94,13 @@ class UserFormView(View):
         if form.is_valid():
             user = form.save(commit=False)
 
-            # first_name = form.cleaned_data['first_name']
-            # last_name = form.cleaned_data['last_name']
-            username = form.cleaned_data['username']
+
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             user.set_password(password)
             user.save()
 
-            user = authenticate(username=username, email=email, password=password)
+            user = authenticate(email=email, password=password)
 
             if user is not None:
                 if user.is_active:
