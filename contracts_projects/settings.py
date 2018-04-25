@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'contracts.apps.AppConfig',
+    'contracts'
 ]
 
 MIDDLEWARE = [
@@ -121,4 +121,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTHENTICATION_BACKENDS = ['contracts.backends.AuthBackend']
+AUTHENTICATION_BACKENDS = ['contracts.auth.backend.AuthBackend']
+AUTH_USER_MODEL = 'contracts.User'
+LOGIN_REDIRECT_URL = '/'

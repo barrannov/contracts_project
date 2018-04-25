@@ -1,21 +1,21 @@
 from django.shortcuts import render
-from django.views import View, generic
+from django.views import View
 from .forms import UserForm, LoginForm, CreateContractForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.views import login
 from django.shortcuts import redirect
 from .models import ContractModel
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
 class HomePage(View):
     template_name = 'home_page.html'
 
     def get(self, request):
+        print(request.user.is_authenticated)
         return render(request, self.template_name)
 
-
-
-# class ContractSearch(ListView)
 
 
 class CreateContract(View):
@@ -71,12 +71,15 @@ class Login(View):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            user = authenticate(email=email, password=password)
+            # backend = AuthBackend()
+            user = authenticate(request=request, email=email, password=password)
 
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return redirect('/')
+                    return HttpResponseRedirect('/')
+
+                    # return redirect('/', {'user', user})
         return render(request, self.template_name, {'form': form})
 
 
@@ -99,6 +102,7 @@ class UserFormView(View):
             password = form.cleaned_data['password']
             user.set_password(password)
             user.save()
+
 
             user = authenticate(email=email, password=password)
 

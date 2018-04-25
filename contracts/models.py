@@ -1,6 +1,25 @@
 from django.db import models
 # Create your models here.
 from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, full_name, password=None):
+        if not email:
+            raise ValueError('Email must be set!')
+        user = self.model(email=email, full_name=full_name)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, email, full_name, password):
+        user = self.create_user(email, full_name, password)
+        user.is_admin = True
+        user.save()
+        return user
+
+    def get_by_natural_key(self, email):
+        return self.get(email=email)
 
 class User(AbstractBaseUser):
     email = models.EmailField(
@@ -10,9 +29,13 @@ class User(AbstractBaseUser):
     )
 
     full_name = models.CharField(max_length=50)
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name']
+    objects = UserManager()
+
+    @property
+    def is_authenticated(self):
+        return False
 
 
 class ContractModel(models.Model):
