@@ -1,6 +1,6 @@
 # from django.contrib.auth.models import User
 from django import forms
-from .models import ContractModel, User
+from .models import ContractModel, WebsiteUser
 
 
 class LoginForm(forms.Form):
@@ -13,7 +13,7 @@ class UserForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
-        model = User
+        model = WebsiteUser
         fields = ['full_name', 'email']
 
     def clean(self):

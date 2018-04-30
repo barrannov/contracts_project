@@ -21,7 +21,7 @@ class UserManager(BaseUserManager):
     def get_by_natural_key(self, email):
         return self.get(email=email)
 
-class User(AbstractBaseUser):
+class WebsiteUser(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -33,14 +33,10 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ['full_name']
     objects = UserManager()
 
-    @property
-    def is_authenticated(self):
-        return False
-
 
 class ContractModel(models.Model):
     name = models.CharField(max_length=50)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(WebsiteUser, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
