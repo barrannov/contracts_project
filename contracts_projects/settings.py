@@ -123,4 +123,3 @@ STATIC_URL = '/static/'
 
 AUTHENTICATION_BACKENDS = ['contracts.auth.backend.AuthBackend']
 AUTH_USER_MODEL = 'contracts.WebsiteUser'
-LOGIN_REDIRECT_URL = '/'

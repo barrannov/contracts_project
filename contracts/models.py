@@ -1,7 +1,7 @@
 from django.db import models
-# Create your models here.
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, full_name, password=None):
@@ -21,6 +21,7 @@ class UserManager(BaseUserManager):
     def get_by_natural_key(self, email):
         return self.get(email=email)
 
+
 class WebsiteUser(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='email address',
@@ -31,6 +32,7 @@ class WebsiteUser(AbstractBaseUser):
     full_name = models.CharField(max_length=50)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name']
+
     objects = UserManager()
 
 

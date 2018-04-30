@@ -4,7 +4,7 @@ from .forms import UserForm, LoginForm, CreateContractForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.views import login
 from django.shortcuts import redirect
-from .models import ContractModel
+from .models import ContractModel, WebsiteUser
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
@@ -38,12 +38,14 @@ class CreateContract(View):
             return render(request, self.template_name, {'form': form, 'message': 'Successfully created!'})
 
 
+
 class AllContracts(View):
     template_name = 'all-contracts.html'
 
     def get(self, request):
         all_posts = ContractModel.objects.all()
         return render(self.request, self.template_name, {'all_posts': all_posts})
+
 
 class MyContracts(View):
     template_name = 'my-contracts.html'
@@ -54,6 +56,17 @@ class MyContracts(View):
         return render(self.request, self.template_name, {'posts': logged_in_user_posts})
         # return ContractModel.objects.all()
 
+
+from django.http import HttpResponse
+
+
+def my_login(request):
+    m = WebsiteUser.objects.get(username=request.POST['username'])
+    if m.password == request.POST['password']:
+        request.session['member_id'] = m.id
+        return HttpResponse("You're logged in.")
+    else:
+        return HttpResponse("Your username and password didn't match.")
 
 class Login(View):
     form_class = LoginForm
@@ -71,15 +84,13 @@ class Login(View):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            # backend = AuthBackend()
             user = authenticate(request=request, email=email, password=password)
 
             if user is not None:
                 if user.is_active:
-                    login(request, user)
-                    return HttpResponseRedirect('/')
-
-                    # return redirect('/', {'user', user})
+                    my_login(request)
+                    return redirect('/')
+                    # return render(request, 'home_page.html', locals())
         return render(request, self.template_name, {'form': form})
 
 
