@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from .forms import UserForm, LoginForm, CreateContractForm
 from django.contrib.auth import authenticate
-from django.contrib.auth.views import login
+from django.contrib.auth import login
 from django.shortcuts import redirect
 from .models import ContractModel, WebsiteUser
 from django.http import HttpResponseRedirect
@@ -60,14 +60,6 @@ class MyContracts(View):
 from django.http import HttpResponse
 
 
-def my_login(request):
-    m = WebsiteUser.objects.get(username=request.POST['username'])
-    if m.password == request.POST['password']:
-        request.session['member_id'] = m.id
-        return HttpResponse("You're logged in.")
-    else:
-        return HttpResponse("Your username and password didn't match.")
-
 class Login(View):
     form_class = LoginForm
     template_name = 'login.html'
@@ -88,7 +80,7 @@ class Login(View):
 
             if user is not None:
                 if user.is_active:
-                    my_login(request)
+                    login(request, user)
                     return redirect('/')
                     # return render(request, 'home_page.html', locals())
         return render(request, self.template_name, {'form': form})
