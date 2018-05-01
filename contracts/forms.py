@@ -35,4 +35,4 @@ class CreateContractForm(forms.ModelForm):
 
     class Meta:
         model = ContractModel
-        fields = ['name']
+        fields = ['organisation_name', 'city', 'expire_date', 'price_per_month', 'additional_notes']

@@ -1,12 +1,35 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
 {% block content %}
-<form action="" method="post">
-    {% csrf_token %}
-    <table>
-        {{ form }}
-    </table>
-    <input type="submit" value="Submit"/>
-</form>
-<p>{{message}}</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="col-sm-3  form-group fieldWrapper">
+            {{ form.city.errors }}
+            <label for="{{ form.city.id_for_label }}">City:</label>
+            {{ form.city|add_class:"form-control " }}
+        </div>
+        <div class="col-sm-3  form-group fieldWrapper">
+            {{ form.organisation_name.errors }}
+            <label for="{{ form.organisation_name.id_for_label }}">Organisation name:</label>
+            {{ form.organisation_name|add_class:"form-control " }}
+        </div>
+        <div class="col-sm-3 form-group fieldWrapper">
+            {{ form.expire_date.errors }}
+            <label for="{{ form.expire_date.id_for_label }}">Expire Date:</label>
+            {{ form.expire_date|add_class:"form-control " }}
+        </div>
+        <div class="col-sm-3  form-group fieldWrapper">
+            {{ form.price_per_month.errors }}
+            <label for="{{ form.price_per_month.id_for_label }}">Price per month:</label>
+            {{ form.price_per_month|add_class:"form-control " }}
+        </div>
+        <div class="col-sm-3 form-group fieldWrapper">
+            {{ form.additional_notes.errors }}
+            <label for="{{ form.additional_notes.id_for_label }}">Additional information:</label>
+            {{ form.additional_notes|add_class:"form-control " }}
+        </div>
+        <button type="submit" class="btn" value="Submit">Create</button>
+    </form>
+    <p>{{ message }}</p>
 {% endblock %}

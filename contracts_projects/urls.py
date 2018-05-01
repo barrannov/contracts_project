@@ -24,7 +24,7 @@ from contracts.admin import admin_view
 admin.site.admin_view = admin_view
 
 urlpatterns = [
-    path('admin/', ()(admin.site.urls)),
+    path('admin/', (admin.site.urls)),
     url(r'^admin/login/', page_not_found),
     path('', include('contracts.urls')),
 ]

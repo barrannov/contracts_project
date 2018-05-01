@@ -29,9 +29,8 @@ class CreateContract(View):
         form = self.form_class(request.POST)
 
         if form.is_valid():
-            name = form.cleaned_data['name']
-            author = self.request.user
-            contract_record = ContractModel(name=name, author=author)
+            contract_record = form.save()
+            contract_record['author'] = self.request.user
             contract_record.save()
             return render(request, self.template_name, {'form': form, 'message': 'Successfully created!'})
 

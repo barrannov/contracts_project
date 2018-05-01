@@ -69,8 +69,12 @@ class WebsiteUser(AbstractBaseUser):
 
 
 class ContractModel(models.Model):
-    name = models.CharField(max_length=50)
+    organisation_name = models.CharField(max_length=100)
+    city = models.CharField(max_length=50)
+    expire_date = models.DateField()
     author = models.ForeignKey(WebsiteUser, on_delete=models.SET_NULL, null=True)
+    price_per_month = models.IntegerField()
+    additional_notes = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return self.organisation_name
