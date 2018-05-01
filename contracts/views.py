@@ -30,7 +30,7 @@ class CreateContract(View):
 
         if form.is_valid():
             contract_record = form.save()
-            contract_record['author'] = self.request.user
+            contract_record.author = self.request.user
             contract_record.save()
             return render(request, self.template_name, {'form': form, 'message': 'Successfully created!'})
 
