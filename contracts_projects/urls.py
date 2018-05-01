@@ -16,8 +16,15 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import include, url
+from django.contrib import admin
+from django.views.defaults import page_not_found
+from contracts.admin import admin_view
+
+admin.site.admin_view = admin_view
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', ()(admin.site.urls)),
+    url(r'^admin/login/', page_not_found),
     path('', include('contracts.urls')),
 ]

@@ -17,7 +17,6 @@ class HomePage(View):
         return render(request, self.template_name)
 
 
-
 class CreateContract(View):
     form_class = CreateContractForm
     template_name = 'create_contract.html'
@@ -30,13 +29,11 @@ class CreateContract(View):
         form = self.form_class(request.POST)
 
         if form.is_valid():
-
             name = form.cleaned_data['name']
             author = self.request.user
             contract_record = ContractModel(name=name, author=author)
             contract_record.save()
             return render(request, self.template_name, {'form': form, 'message': 'Successfully created!'})
-
 
 
 class AllContracts(View):
@@ -100,12 +97,10 @@ class UserFormView(View):
         if form.is_valid():
             user = form.save(commit=False)
 
-
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             user.set_password(password)
             user.save()
-
 
             user = authenticate(email=email, password=password)
 
@@ -114,5 +109,3 @@ class UserFormView(View):
                     login(request, user)
                     return redirect('/')
         return render(request, self.template_name, {'form': form})
-
-
